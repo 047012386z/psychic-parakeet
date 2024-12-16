@@ -1,0 +1,10 @@
+{
+  // https://nuxt.com/docs/guide/concepts/typescript
+  "extends": "./.nuxt/tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "paths": {
+      "html5-qrcode": ["node_modules/html5-qrcode/index"]
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "html5-qrcode": "^2.3.8",
+    "nuxt": "^3.14.1592",
+    "qrcode": "^1.5.4",
+    "vue": "latest",
+    "vue-router": "latest"
+  }
+}
