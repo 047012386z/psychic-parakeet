@@ -7,7 +7,7 @@
       {{ data }}
     </div>
     <br>
-    <button @click="submitData" class="bg-blue-500 text-white px-4 py-2 mt-2">
+    <button @click="submitData" class="bg-blue-500 text-white px-4 py-2 mt-2 rounded-full">
       ส่งข้อมูล
     </button>
 
@@ -94,5 +94,9 @@ p {
 
 .text-lg {
   font-size: 1.25rem; /* เพิ่มขนาดตัวหนังสือ */
+}
+
+button {
+  border-radius: 9999px; /* ทำให้ปุ่มมน */
 }
 </style>

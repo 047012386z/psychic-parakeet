@@ -13,6 +13,9 @@
         <li>
           <NuxtLink to="/stored-data" class="menu-link" active-class="active-link">View Stored Data</NuxtLink>
         </li>
+        <li>
+          <NuxtLink to="/photo-data" class="menu-link" active-class="active-link">View Photo</NuxtLink>
+        </li>
       </ul>
     </div>
   </template>

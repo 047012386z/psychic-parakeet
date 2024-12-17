@@ -14,7 +14,7 @@ const generateQRCode = async () => {
 </script>
 
 <template>
-  <div class="p-5">
+  <div class="container">
     <h1>สร้าง QR Code</h1>
     <input
       type="text"
@@ -33,5 +33,13 @@ const generateQRCode = async () => {
 </template>
 
 <style scoped>
-/* เพิ่มสไตล์ตามต้องการ */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  text-align: center;
+  padding-top: 20vh; /* Adjust this value as needed */
+}
 </style>

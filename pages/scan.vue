@@ -76,31 +76,58 @@ const handleFileUpload = async (event: Event) => {
 </script>
 
 <template>
-    <div class="p-5">
-        <h1 class="text-lg font-bold mb-4">QR Code Scanner</h1>
+    <div class="container">
+        <div class="content">
+            <h1 class="text-lg font-bold mb-4">QR Code Scanner</h1>
 
-        <div class="mb-4">
-            <button v-if="!isScanning" @click="startScanner" class="bg-blue-500 text-white px-4 py-2 rounded mr-2">
-                Start Camera Scanner
-            </button>
-            <button v-if="isScanning" @click="stopScanner" class="bg-red-500 text-white px-4 py-2 rounded mr-2">
-                Stop Camera Scanner
-            </button>
-            <label class="bg-gray-500 text-white px-4 py-2 rounded cursor-pointer">
-                Upload Image
-                <input type="file" accept="image/*" @change="handleFileUpload" hidden />
-            </label>
-        </div>
+            <div class="mb-4">
+                <button v-if="!isScanning" @click="startScanner" class="bg-blue-500 text-white px-4 py-2 rounded mr-2">
+                    Start Camera Scanner
+                </button>
+                <button v-if="isScanning" @click="stopScanner" class="bg-red-500 text-white px-4 py-2 rounded mr-2">
+                    Stop Camera Scanner
+                </button>
+                <label class="bg-gray-500 text-white px-4 py-2 rounded cursor-pointer">
+                    Upload Image
+                    <input type="file" accept="image/*" @change="handleFileUpload" hidden />
+                </label>
+            </div>
 
-        <div id="reader" class="mb-4" style="width: 300px; height: 300px; border: 1px solid #ddd;"></div>
+            <div id="reader" class="mb-4 reader"></div>
 
-        <div v-if="result" class="mt-4">
-            <h2 class="text-green-500 font-bold text-wrap">Result:</h2>
-            <p>{{ result }}</p>
-        </div>
+            <div v-if="result" class="mt-4">
+                <h2 class="text-green-500 font-bold text-wrap">Result:</h2>
+                <p>{{ result }}</p>
+            </div>
 
-        <div v-if="errorMessage" class="mt-4 text-red-500">
-            <p>{{ errorMessage }}</p>
+            <div v-if="errorMessage" class="mt-4 text-red-500">
+                <p>{{ errorMessage }}</p>
+            </div>
         </div>
     </div>
 </template>
+
+<style scoped>
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+}
+
+.content {
+    text-align: center;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.reader {
+    width: 300px;
+    height: 300px;
+    border: 1px solid #ddd;
+    margin: 0 auto;
+}
+</style>
