@@ -5,9 +5,6 @@
           <NuxtLink to="/scan" class="menu-link" active-class="active-link">Scan</NuxtLink>
         </li>
         <li>
-          <NuxtLink to="/show" class="menu-link" active-class="active-link">Show</NuxtLink>
-        </li>
-        <li>
           <NuxtLink to="/genqrcode" class="menu-link" active-class="active-link">Generate QR Code</NuxtLink>
         </li>
         <li>

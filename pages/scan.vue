@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { Html5Qrcode } from 'html5-qrcode';
+import { useRouter } from 'vue-router';
 
 const result = ref<string | null>(null);
 const errorMessage = ref<string | null>(null);
 const isScanning = ref(false);
 let html5QrCode: Html5Qrcode | null = null;
+const router = useRouter();
 
 const startScanner = async () => {
     if (html5QrCode) return;
@@ -24,14 +26,12 @@ const startScanner = async () => {
                     if (decodedText) {
                         result.value = decodedText;
                         errorMessage.value = null;
-                        const date = new Date();
-                        window.location.href = `/show?text=${decodedText}&date=${date.toISOString()}`;
                         stopScanner();
+                        router.push({ path: '/SubmitData', query: { text: decodedText } });
                     }
                 },
                 (error) => {
-                    //   errorMessage.value = `Scanning error: ${error}`;
-                    errorMessage.value = 'Scanning qr code'
+                    errorMessage.value = 'Scanning qr code';
                 }
             );
         } else {
@@ -63,9 +63,8 @@ const handleFileUpload = async (event: Event) => {
             const decodedText = await scanner.scanFile(file);
             console.log('Decoded Text:', decodedText);
             result.value = decodedText;
-            const date = new Date();
-            window.location.href = `/show?text=${decodedText}&date=${date.toISOString()}`;
             errorMessage.value = null;
+            router.push({ path: '/SubmitData', query: { text: decodedText } });
         } catch (err) {
             console.error('Error decoding QR Code:', err);
             errorMessage.value = 'Failed to decode QR Code from file.';
