@@ -1,86 +1,87 @@
 <template>
-    <div class="photo-data">
-        <table>
-            <thead>
-                <tr>
-                    <th>รูปภาพ</th>
-                    <th>เวลาที่สร้าง</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="photo in sortedPhotos" :key="photo.id">
-                    <td><img :src="photo.url" :alt="photo.description" /></td>
-                    <td>{{ new Date(photo.createdAt).toLocaleString() }}</td>
-                </tr>
-                <!-- Add a new row for the specific image -->
-                <tr>
-                    <td><img src="/images/ดาวน์โหลด.jpg" alt="ดาวน์โหลด" /></td>
-                    <td>{{ new Date().toLocaleString() }}</td>
-                </tr>
-            </tbody>
-        </table>
+  <div>
+    <h1>Image Gallery</h1>
+    
+    <div v-if="loading">Loading images...</div>
+    <div v-else>
+      <table>
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="image in images" :key="image.id">
+            <td class="image-item">
+              <img :src="image.url" :alt="image.name" />
+            </td>
+            <td>{{ formatDateTime(image.createdAt) }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+  </div>
 </template>
 
-<script>
-export default {
-    data() {
-        return {
-            photos: [],
-            loading: true,
-            error: null
-        };
-    },
-    computed: {
-        sortedPhotos() {
-            return this.photos.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        }
-    },
-    created() {
-        this.loadPhotos();
-    },
-    methods: {
-        async loadPhotos() {
-            try {
-                const response = await fetch('/api/photos');
-                const result = await response.json();
-                if (result.photos) {
-                    this.photos = result.photos;
-                }
-            } catch (error) {
-                this.error = 'Failed to load photos';
-                console.error('Error fetching photos:', error);
-            } finally {
-                this.loading = false;
-            }
-        }
+<script lang="ts">
+import { defineComponent } from '@nuxtjs/composition-api';
+
+export default defineComponent({
+  data() {
+    return {
+      images: [] as Array<{ id: number, url: string, name: string, createdAt: string }>,
+      loading: true,
+      error: ''
+    };
+  },
+  async mounted() {
+    try {
+      const response = await fetch('/api/photos');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      
+      // Sort images by createdAt date
+      this.images = data.photos.sort((a: { createdAt: string }, b: { createdAt: string }) => 
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      );
+    } catch (error) {
+      console.error('Error fetching images:', error);
+      this.error = 'Failed to load images. Please try again later.';
+    } finally {
+      this.loading = false;
     }
-};
+  },
+  methods: {
+    formatDateTime(dateTime: string) {
+      const date = new Date(dateTime);
+      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+    }
+  }
+});
 </script>
 
 <style scoped>
-.photo-data {
-    width: 100%;
-    margin: 0 auto;
+.image-item img {
+  width: 100px;
+  height: auto;
+  border-radius: 8px;
 }
-
 table {
-    width: 100%;
-    border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
 }
 
 th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
 }
 
 th {
-    background-color: #f2f2f2;
-}
-
-img {
-    max-width: 100px;
-    height: auto;
+  background-color: #f2f2f2;
 }
 </style>
