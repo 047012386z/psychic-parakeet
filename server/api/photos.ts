@@ -20,7 +20,7 @@ export default defineEventHandler(() => {
         id: index + 1,
         url: `/images/${file}`,
         name: file,
-        dateTime: stats.birthtime; // เวลาไฟล์ถูกสร้าง
+        dateTime: stats.birthtime // เวลาไฟล์ถูกสร้าง
       };
     });
 

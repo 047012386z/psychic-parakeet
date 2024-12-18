@@ -16,7 +16,7 @@
                         <td class="image-item">
                             <img :src="image.url" :alt="image.name" />
                         </td>
-                        <td>{{ formatDateTime(image.createdAt) }}</td>
+                        <td>{{ formatDateTime(image.dateTime) }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -25,10 +25,12 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
+
 export default defineComponent({
     data() {
         return {
-            images: [] as Array<{ id: number, url: string, name: string, createdAt: string }>,
+            images: [] as Array<{ id: number, url: string, name: string, dateTime: string }>,
             loading: true,
             error: ''
         };
@@ -41,9 +43,9 @@ export default defineComponent({
             }
             const data = await response.json();
             
-            // Sort images by createdAt date
-            this.images = data.sort((a: { createdAt: string }, b: { createdAt: string }) => 
-                new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+            // Sort images by dateTime
+            this.images = data.sort((a: { dateTime: string }, b: { dateTime: string }) => 
+                new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
             );
         } catch (error) {
             console.error('Error fetching images:', error);
