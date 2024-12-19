@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import exifReader from 'exif-reader';
 
 export default defineEventHandler(() => {
   // กำหนดเส้นทางโฟลเดอร์รูปภาพ
@@ -15,12 +16,21 @@ export default defineEventHandler(() => {
     .map((file: string, index: number) => {
       const filePath: string = path.join(imagesDir, file);
       const stats = fs.statSync(filePath);
-      
+
+      // อ่านข้อมูล EXIF
+      const buffer = fs.readFileSync(filePath);
+      let exifData = {};
+      try {
+        exifData = exifReader(buffer);
+      } catch (error) {
+        console.error(`Error reading EXIF data from ${file}:`, error);
+      }
+
       return {
         id: index + 1,
         url: `/images/${file}`,
         name: file,
-        dateTime: stats.birthtime // เวลาไฟล์ถูกสร้าง
+        dateTime: exifData?.exif?.DateTimeOriginal || stats.birthtime // เวลาไฟล์ถูกสร้างหรือข้อมูล EXIF
       };
     });
 
