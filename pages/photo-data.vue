@@ -25,6 +25,7 @@
             <h2>Upload New Image</h2>
             <input type="file" @change="onFileChange" />
             <button @click="uploadImage">Upload</button>
+            <div v-if="uploadError" class="error">{{ uploadError }}</div>
         </div>
     </div>
 </template>
@@ -59,19 +60,18 @@ export default defineComponent({
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                const images = await response.json();
+                let images = await response.json();
+                images = images.sort((a: Image, b: Image) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime());
                 this.images = images;
+            } catch (error) {
+                console.error('Error fetching images:', error);
             } finally {
                 this.loading = false;
             }
         },
         onFileChange(event: Event) {
-            const input = event.target as HTMLInputElement;
-            if (input && input.files && input.files[0]) {
-                this.selectedFile = input.files[0];
-            } else {
-                this.selectedFile = null;
-            }
+            const file = (event.target as HTMLInputElement).files[0];
+            this.selectedFile = file;
         },
         async uploadImage() {
             if (!this.selectedFile) {
@@ -94,6 +94,7 @@ export default defineComponent({
 
                 const newImage = await response.json();
                 this.images.push(newImage);
+                this.images.sort((a: Image, b: Image) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime());
                 this.selectedFile = null;
                 this.uploadError = '';
             } catch (error) {
@@ -123,19 +124,15 @@ export default defineComponent({
 
 .image-table th {
     background-color: #f2f2f2;
-    font-weight: bold;
-}
-
-.image-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.image-table tr:hover {
-    background-color: #ddd;
 }
 
 .image-item img {
     max-width: 100px;
     max-height: 100px;
+}
+
+.error {
+    color: red;
+    margin-top: 10px;
 }
 </style>
