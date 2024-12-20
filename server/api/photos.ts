@@ -1,23 +1,38 @@
+import fs from 'fs';
 import path from 'path';
-import { promises as fs } from 'fs';
 import exifReader from 'exif-reader';
 
-// Retrieve image data
-const images = files
-  .filter((file: string) => imageExtensions.some((ext: string) => file.toLowerCase().endsWith(ext)))
-  .map(async (file: string, index: number) => {
-    const filePath: string = path.join(imagesDir, file);
-    const fileData = await fs.readFile(filePath);
-    const exifData = exifReader(fileData);
+export default defineEventHandler(() => {
+  // Define the path to the images folder
+  const imagesDir: string = path.resolve('./public/images'); 
+  const files: string[] = fs.readdirSync(imagesDir);
 
-    return {
-      fileName: file,
-      filePath,
-      exifData
-    };
-  });
+  // Define the image file extensions to look for
+  const imageExtensions: string[] = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 
-// Wait for all promises to resolve
-const resolvedImages = await Promise.all(images);
+  // Retrieve image data
+  const images = files
+    .filter((file: string) => imageExtensions.some((ext: string) => file.toLowerCase().endsWith(ext)))
+    .map((file: string, index: number) => {
+      const filePath: string = path.join(imagesDir, file);
+      const stats = fs.statSync(filePath);
 
-return resolvedImages;
+      // Read EXIF data
+      const buffer = fs.readFileSync(filePath);
+      let exifData = {};
+      try {
+        exifData = exifReader(buffer);
+      } catch (error) {
+        console.error(`Error reading EXIF data from ${file}:`, error);
+      }
+
+      return {
+        id: index + 1,
+        url: `/images/${file}`,
+        name: file,
+        dateTime: exifData?.exif?.DateTimeOriginal || stats.birthtime // File creation time or EXIF data
+      };
+    });
+
+  return images;
+});
