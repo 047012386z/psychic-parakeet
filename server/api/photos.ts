@@ -1,38 +1,23 @@
-import fs from 'fs';
 import path from 'path';
+import { promises as fs } from 'fs';
 import exifReader from 'exif-reader';
 
-export default defineEventHandler(() => {
-  // กำหนดเส้นทางโฟลเดอร์รูปภาพ
-  const imagesDir: string = path.resolve('./public/images'); 
-  const files: string[] = fs.readdirSync(imagesDir);
+// Retrieve image data
+const images = files
+  .filter((file: string) => imageExtensions.some((ext: string) => file.toLowerCase().endsWith(ext)))
+  .map(async (file: string, index: number) => {
+    const filePath: string = path.join(imagesDir, file);
+    const fileData = await fs.readFile(filePath);
+    const exifData = exifReader(fileData);
 
-  // นามสกุลไฟล์รูปภาพที่ต้องการ
-  const imageExtensions: string[] = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
+    return {
+      fileName: file,
+      filePath,
+      exifData
+    };
+  });
 
-  // ดึงข้อมูลรูปภาพ
-  const images = files
-    .filter((file: string) => imageExtensions.some((ext: string) => file.toLowerCase().endsWith(ext)))
-    .map((file: string, index: number) => {
-      const filePath: string = path.join(imagesDir, file);
-      const stats = fs.statSync(filePath);
+// Wait for all promises to resolve
+const resolvedImages = await Promise.all(images);
 
-      // อ่านข้อมูล EXIF
-      const buffer = fs.readFileSync(filePath);
-      let exifData = {};
-      try {
-        exifData = exifReader(buffer);
-      } catch (error) {
-        console.error(`Error reading EXIF data from ${file}:`, error);
-      }
-
-      return {
-        id: index + 1,
-        url: `/images/${file}`,
-        name: file,
-        dateTime: exifData?.exif?.DateTimeOriginal || stats.birthtime // เวลาไฟล์ถูกสร้างหรือข้อมูล EXIF
-      };
-    });
-
-  return images;
-});
+return resolvedImages;

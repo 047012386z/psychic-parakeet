@@ -21,12 +21,6 @@
                 </tbody>
             </table>
         </div>
-        <div>
-            <h2>Upload New Image</h2>
-            <input type="file" @change="onFileChange" />
-            <button @click="uploadImage">Upload</button>
-            <div v-if="uploadError" class="error">{{ uploadError }}</div>
-        </div>
     </div>
 </template>
 
@@ -67,39 +61,6 @@ export default defineComponent({
                 console.error('Error fetching images:', error);
             } finally {
                 this.loading = false;
-            }
-        },
-        onFileChange(event: Event) {
-            const file = (event.target as HTMLInputElement).files[0];
-            this.selectedFile = file;
-        },
-        async uploadImage() {
-            if (!this.selectedFile) {
-                this.uploadError = 'No file selected.';
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('file', this.selectedFile);
-
-            try {
-                const response = await fetch('/api/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const newImage = await response.json();
-                this.images.push(newImage);
-                this.images.sort((a: Image, b: Image) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime());
-                this.selectedFile = null;
-                this.uploadError = '';
-            } catch (error) {
-                console.error('Error uploading image:', error);
-                this.uploadError = 'Failed to upload image. Please try again later.';
             }
         }
     },
