@@ -14,6 +14,9 @@ importers:
       '@nuxt/ui':
         specifier: 2.20.0
         version: 2.20.0(change-case@5.4.4)(magicast@0.3.5)(qrcode@1.5.4)(rollup@4.28.1)(typescript@5.7.2)(vite@5.4.11(@types/node@22.10.2)(terser@5.37.0))(vue@3.5.13(typescript@5.7.2))
+      exif-js:
+        specifier: ^2.3.0
+        version: 2.3.0
       exif-reader:
         specifier: ^2.0.1
         version: 2.0.1
@@ -1743,6 +1746,9 @@ packages:
   execa@8.0.1:
     resolution: {integrity: sha512-VyhnebXciFV2DESc+p6B+y0LjSm0krU4OgJN44qFAhBY0TJ+1V61tYD2+wHusZ6F9n5K+vl8k0sTy7PEfV4qpg==}
     engines: {node: '>=16.17'}
+
+  exif-js@2.3.0:
+    resolution: {integrity: sha512-1Og9pAzG2FZRVlaavH8bB8BTeHcjMdJhKmeQITkX+uLRCD0xPtKAdZ2clZmQdJ56p9adXtJ8+jwrGp/4505lYg==}
 
   exif-reader@2.0.1:
     resolution: {integrity: sha512-gCQ/86RiAWSjeSlalj1G99IC6XnxbwkvB91HLqhh8somj/YBtC/2xuplvyjDjlfO7NsmYREPPElu/Syuy/H52g==}
@@ -5505,6 +5511,8 @@ snapshots:
       onetime: 6.0.0
       signal-exit: 4.1.0
       strip-final-newline: 3.0.0
+
+  exif-js@2.3.0: {}
 
   exif-reader@2.0.1: {}
 
