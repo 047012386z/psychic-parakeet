@@ -16,6 +16,9 @@
         <li>
           <NuxtLink to="/photo-data" class="menu-link" active-class="active-link">View Photo</NuxtLink>
         </li>
+        <li>
+          <NuxtLink to="/upload" class="menu-link" active-class="active-link">UPLOAD</NuxtLink>
+        </li>
       </ul>
     </div>
   </template>

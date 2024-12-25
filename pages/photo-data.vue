@@ -1,99 +1,61 @@
 <template>
-    <div>
-        <h1>Image Gallery</h1>
-        
-        <div v-if="loading">Loading images...</div>
-        <div v-else>
-            <table class="image-table">
-                <thead>
-                    <tr>
-                        <th>Image</th>
-                        <th>Created At</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="image in images" :key="image.id">
-                        <td class="image-item">
-                            <img :src="image.url" :alt="image.name" />
-                        </td>
-                        <td>{{ formatDateTime(image.dateTime) }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+    <div class="gallery-container">
+        <h1>Photo Gallery</h1>
+        <ul class="gallery">
+            <li v-for="item in data" :key="item.fileName" class="gallery-item">
+                <h3>{{ item.fileName }}</h3>
+                <img :src="item.imageUrl" alt="Image" class="gallery-image" />
+                <p>Date Taken: {{ item.DateTimeOriginal }}</p>
+            </li>
+        </ul>
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-
-interface Image {
-    id: number;
-    url: string;
-    name: string;
-    dateTime: string;
-}
-
-export default defineComponent({
-    data() {
-        return {
-            images: [] as Image[],
-            loading: true,
-            selectedFile: null as File | null,
-            uploadError: ''
-        };
-    },
-    methods: {
-        formatDateTime(dateTime: string) {
-            const date = new Date(dateTime);
-            return date.toLocaleString();
-        },
-        async fetchImages() {
-            try {
-                const response = await fetch('/api/photos');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                let images = await response.json();
-                images = images.sort((a: Image, b: Image) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime());
-                this.images = images;
-            } catch (error) {
-                console.error('Error fetching images:', error);
-            } finally {
-                this.loading = false;
-            }
-        }
-    },
-    async mounted() {
-        await this.fetchImages();
-    }
-});
+<script setup lang="ts">
+const { data } = useFetch('/api/images');
 </script>
 
 <style scoped>
-.image-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+.gallery-container {
+    text-align: center;
+    padding: 20px;
 }
 
-.image-table th, .image-table td {
+.gallery {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.gallery-item {
+    margin: 15px;
     border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
 }
 
-.image-table th {
-    background-color: #f2f2f2;
+.gallery-item:hover {
+    transform: scale(1.05);
 }
 
-.image-item img {
-    max-width: 100px;
-    max-height: 100px;
+.gallery-image {
+    max-width: 300px;
+    max-height: 300px;
+    width: 100%;
+    height: auto;
+    display: block;
 }
 
-.error {
-    color: red;
-    margin-top: 10px;
+h3 {
+    margin: 10px 0;
+}
+
+p {
+    margin: 10px;
+    color: #555;
 }
 </style>
