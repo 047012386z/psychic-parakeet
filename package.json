@@ -14,6 +14,7 @@
     "@metadata/exif": "^1.0.0",
     "@nuxt/ui": "2.20.0",
     "@wrote/read": "^1.0.4",
+    "axios": "^1.7.9",
     "exif-js": "^2.3.0",
     "exif-reader": "^2.0.1",
     "html5-qrcode": "^2.3.8",

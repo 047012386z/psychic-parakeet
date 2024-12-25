@@ -19,6 +19,9 @@
         <li>
           <NuxtLink to="/upload" class="menu-link" active-class="active-link">UPLOAD</NuxtLink>
         </li>
+        <li>
+          <NuxtLink to="/upload2" class="menu-link" active-class="active-link">UPLOAD2</NuxtLink>
+        </li>
       </ul>
     </div>
   </template>
